@@ -1,9 +1,10 @@
 package com.educandoweb.course.resources;
 
 import com.educandoweb.course.entities.User;
-import com.educandoweb.course.repositories.UserRepository;
+import com.educandoweb.course.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,15 +14,24 @@ import java.util.List;
 @RequestMapping(value = "/users")
 public class UserResource {
 
-    private final UserRepository userRepository;
+    private final UserService service;
 
-    public UserResource(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserResource(UserService service) {
+        this.service = service;
     }
+
 
     @GetMapping
     public ResponseEntity<List<User>> findAll(){
-        List<User> result = userRepository.findAll();
-        return ResponseEntity.ok().body(result);
+        List<User> list = service.findAll();
+        return ResponseEntity.ok().body(list);
     }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<User> findById(@PathVariable Long id){
+        User user = service.findById(id);
+        return ResponseEntity.ok().body(user);
+    }
+
+
 }
